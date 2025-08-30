@@ -28,14 +28,37 @@
   <div id="posts"></div>
 
   <script>
-    // 投稿前チェック
-    document.getElementById("bbsForm").addEventListener("submit", function(e) {
-      const name = document.getElementById("name").value.trim();
-      const content = document.getElementById("content").value.trim();
-      if (!name || !content) {
-        e.preventDefault(); // サーバーに送信させない
-        alert("名前と本文を入力してください");
+    const nameInput = document.getElementById("name");
+    const contentInput = document.getElementById("content");
+    const form = document.getElementById("bbsForm");
+
+    // ページ読み込み時に保存済みの名前を表示
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedName = localStorage.getItem("bbsName");
+      if (savedName) {
+        nameInput.value = savedName;
       }
+    });
+
+    // 投稿前チェック
+    form.addEventListener("submit", function(e) {
+      let name = nameInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!content) {
+        e.preventDefault();
+        alert("本文を入力してください");
+        return;
+      }
+
+      // 名前が空なら「名無しさん」
+      if (!name) {
+        name = "名無しさん";
+        nameInput.value = name; // サーバーに送る値を更新
+      }
+
+      // 名前を保存
+      localStorage.setItem("bbsName", name);
     });
 
     // 投稿一覧ロード
