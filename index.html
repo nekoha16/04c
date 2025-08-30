@@ -5,26 +5,28 @@
   <title>＼(^o^)／</title>
   <style>
     body { font-family: sans-serif; margin: 20px; }
-    form { margin-bottom: 20px; }
+    form { margin-bottom: 20px; display: flex; flex-direction: column; }
     textarea, input[type=text] {
       width: 100%; padding: 6px; margin: 4px 0;
       border: 1px solid #aaa; border-radius: 4px;
     }
-    button { padding: 6px 12px; margin-top: 8px; }
+    .button-row { display: flex; gap: 8px; margin-top: 8px; }
+    button { padding: 6px 12px; }
     .post { border-top: 1px solid #ccc; padding: 10px 0; }
     .meta { font-size: 12px; color: #666; margin-bottom: 4px; }
     .content { padding: 6px; background: #fafafa; }
-    #refreshBtn { margin-bottom: 16px; }
   </style>
 </head>
 <body>
-  <h1>わーい掲示板＼(^o^)／</h1>
+  <h1>test＼(^o^)／</h1>
 
   <form id="bbsForm" action="/post" method="post">
     <input type="text" name="name" id="name" placeholder="名前"><br>
     <textarea name="content" id="content" rows="5" placeholder="本文(HTML可)"></textarea><br>
-    <button type="submit">投稿</button>
-    <button id="refreshBtn">更新</button>
+    <div class="button-row">
+      <button type="submit">投稿</button>
+      <button type="button" id="refreshBtn">更新</button>
+    </div>
   </form>
 
   <div id="posts"></div>
@@ -62,7 +64,7 @@
       localStorage.setItem("bbsName", name);
     });
 
-    // 投稿一覧取得＆表示
+    // 投稿一覧取得&表示
     async function loadPosts() {
       const res = await fetch("/posts.json");
       const posts = await res.json();
