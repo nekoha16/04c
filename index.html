@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>掲示板＼(^o^)／</title>
+  <title>シンプル掲示板</title>
   <style>
     body { font-family: sans-serif; margin: 20px; }
     form { margin-bottom: 20px; }
@@ -17,18 +17,28 @@
   </style>
 </head>
 <body>
-  <h1>シンプルな掲示板</h1>
-  <h2>HTML可/サーバー再起動で投稿Clear</h2>
+  <h1>シンプル掲示板</h1>
 
-  <form action="/post" method="post">
-    <input type="text" name="name" placeholder="名前"><br>
-    <textarea name="content" rows="5" placeholder="本文(HTML可)"></textarea><br>
+  <form id="bbsForm" action="/post" method="post">
+    <input type="text" name="name" id="name" placeholder="名前"><br>
+    <textarea name="content" id="content" rows="5" placeholder="本文（HTML可・危険）"></textarea><br>
     <button type="submit">投稿</button>
   </form>
 
   <div id="posts"></div>
 
   <script>
+    // 投稿前チェック
+    document.getElementById("bbsForm").addEventListener("submit", function(e) {
+      const name = document.getElementById("name").value.trim();
+      const content = document.getElementById("content").value.trim();
+      if (!name || !content) {
+        e.preventDefault(); // サーバーに送信させない
+        alert("名前と本文を入力してください");
+      }
+    });
+
+    // 投稿一覧ロード
     async function load(){
       const res = await fetch("/posts.json");
       const posts = await res.json();
@@ -39,7 +49,7 @@
         div.className = "post";
         div.innerHTML = `
           <div class="meta">#${p.id} ${p.name} (${new Date(p.time).toLocaleString()})</div>
-          <div class="content">${p.content}</div> <!-- ← HTMLもそのまま表示 -->
+          <div class="content">${p.content}</div> <!-- HTMLそのまま -->
         `;
         wrap.appendChild(div);
       });
